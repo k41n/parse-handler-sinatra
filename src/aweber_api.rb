@@ -1,4 +1,5 @@
 # This implements part of AWeber REST api for creating subscribers
+require 'singleton'
 class AweberApi
   include Singleton
 

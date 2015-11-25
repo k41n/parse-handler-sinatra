@@ -1,6 +1,6 @@
 require 'bundler'
 Bundler.require
-require './awever_api.rb'
+require './src/aweber_api.rb'
 
 post '/api/parsecom/:access_token' do
   puts "POST with params: #{params}"
