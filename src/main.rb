@@ -17,11 +17,11 @@ post '/api/parsecom/:access_token' do
   post_params = JSON.parse(body)
   puts "post_params = #{post_params.inspect}"
 
-  @email = post_params['update']['email']
-  if post_params['update']['username'] =~ /^.+@.+$/
-    @email ||= post_params['update']['username']
+  @email = post_params['object']['email']
+  if post_params['object']['username'] =~ /^.+@.+$/
+    @email ||= post_params['object']['username']
   end
-  @name = post_params['update']['name']
+  @name = post_params['object']['name']
   begin
     unless @email.nil? || @email == ''
       AweberApi.instance.add_subscriber(@email, @name)
