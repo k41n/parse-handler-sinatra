@@ -1,25 +1,35 @@
 require 'bundler'
+require 'English'
 Bundler.require
 require './src/aweber_api.rb'
+require 'json'
+require 'sinatra/json'
 
 post '/api/parsecom/:access_token' do
-  puts "POST with params: #{params}"
+  puts JSON.pretty_generate(request.env)
   unless params[:access_token] == ENV['BRIDGE_TOKEN']
     puts 'Wrong access token!'
     return status 404
   end
 
-  @email = params[:update][:email]
-  if params[:update][:username] =~ /^.+@.+$/
-    @email ||= params[:update][:username]
+  body = request.env['rack.input'].read
+  puts "body = #{body}"
+  post_params = JSON.parse(body)
+  puts "post_params = #{post_params.inspect}"
+
+  @email = post_params['update']['email']
+  if post_params['update']['username'] =~ /^.+@.+$/
+    @email ||= post_params['update']['username']
   end
-  @name = params[:update][:name]
+  @name = post_params['update']['name']
   begin
-    AweberApi.instance.add_subscriber(@email, @name) unless @email.blank?
+    unless @email.nil? || @email == ''
+      AweberApi.instance.add_subscriber(@email, @name)
+    end
   rescue AWeber::CreationError
     puts "Subscriber #{@email} already exists"
   rescue
     puts $ERROR_INFO.message
   end
-  status 200
+  json success: true
 end
