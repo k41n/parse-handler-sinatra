@@ -7,6 +7,7 @@ class AweberApi
     require 'aweber'
     @aweber = AWeber::Base.new(oauth)
     @target_list = ENV['AWEBER_TARGET_LIST']
+    puts "TARGET LIST = #{@target_list}"
   end
 
   def add_subscriber(email, name)

@@ -6,7 +6,7 @@ require 'json'
 require 'sinatra/json'
 
 post '/api/parsecom/:access_token' do
-  puts JSON.pretty_generate(request.env)
+  puts "ENV token = #{ENV['BRIDGE_TOKEN']}"
   unless params[:access_token] == ENV['BRIDGE_TOKEN']
     puts 'Wrong access token!'
     return status 404
@@ -30,6 +30,7 @@ post '/api/parsecom/:access_token' do
     puts "Subscriber #{@email} already exists"
   rescue
     puts $ERROR_INFO.message
+    puts $ERROR_INFO.backtrace.join("\n")
   end
   json success: true
 end
